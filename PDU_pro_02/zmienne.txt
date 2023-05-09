@@ -1,0 +1,30 @@
+1.	Year (Rok) - 1987-2008
+2.	Month (Miesiąc) - 1-12 (styczeń-grudzień)
+3.	DayofMonth (Dzień miesiąca) - 1-31
+4.	DayOfWeek (Dzień tygodnia) - 1 (poniedziałek) - 7 (niedziela)
+5.	DepTime (Czas odlotu - faktyczny) - zakres czasu (lokalny, hhmm)
+6.	CRSDepTime (Czas odlotu - zaplanowany) - zakres czasu (lokalny, hhmm)
+7.	ArrTime (Czas przylotu - faktyczny) - zakres czasu (lokalny, hhmm)
+8.	CRSArrTime (Czas przylotu - zaplanowany) - zakres czasu (lokalny, hhmm)
+9.	UniqueCarrier (Unikalny kod przewoźnika)
+10.	FlightNum (Numer lotu)
+11.	TailNum (Numer ogona samolotu)
+12.	ActualElapsedTime (Faktyczny czas lotu) - w minutach
+13.	CRSElapsedTime (Zaplanowany czas lotu) - w minutach
+14.	AirTime (Czas lotu w powietrzu) - w minutach
+15.	ArrDelay (Opóźnienie przylotu) - w minutach
+16.	DepDelay (Opóźnienie odlotu) - w minutach
+17.	Origin (Miejsce odlotu) - kod lotniska (IATA)
+18.	Dest (Miejsce docelowe) - kod lotniska (IATA)
+19.	Distance (Odległość) - w milach
+20.	TaxiIn (Czas taksowania przy przylotach) - w minutach
+21.	TaxiOut (Czas taksowania przy odlotach) - w minutach
+22.	Cancelled (Anulowany) - 1 = tak, 0 = nie
+23.	CancellationCode (Kod anulowania) - powód anulowania (A = przewoźnik, B = pogoda, C = NAS, D = bezpieczeństwo)
+24.	Diverted (Przekierowany) - 1 = tak, 0 = nie
+25.	CarrierDelay (Opóźnienie związane z przewoźnikiem) - w minutach
+26.	WeatherDelay (Opóźnienie związane z pogodą) - w minutach
+27.	NASDelay (Opóźnienie związane z NAS) - w minutach
+28.	SecurityDelay (Opóźnienie związane z bezpieczeństwem) - w minutach
+29.	LateAircraftDelay (Opóźnienie związane z opóźnionym samolotem) - w minutach
+

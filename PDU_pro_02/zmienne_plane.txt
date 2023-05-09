@@ -1,0 +1,17 @@
+TailNum (Numer ogonowy) - Jest to numer identyfikacyjny przypisany do konkretnego samolotu, który jest umieszczony na ogonie samolotu. Służy do jednoznacznego identyfikowania danego samolotu.
+
+Type (Typ) - Odnosi się do rodzaju samolotu, na przykład samolot pasażerski, samolot transportowy, samolot odrzutowy itp.
+
+Manufacturer (Producent) - Jest to nazwa firmy lub marki, która wyprodukowała samolot.
+
+Issue_date (Data wydania) - Oznacza datę wydania samolotu przez producenta lub datę nadania numeru identyfikacyjnego (tail number) samolotowi.
+
+Model (Model) - Jest to konkretny model samolotu, który został wyprodukowany przez producenta.
+
+Status (Status) - Odnosi się do aktualnego statusu samolotu, na przykład czy jest w służbie, wycofany ze służby, w naprawie itp.
+
+Aircraft_type (Typ samolotu) - Określa ogólną kategorię samolotu, na przykład samolot pasażerski, samolot towarowy, samolot prywatny itp.
+
+Engine_type (Typ silnika) - Odnosi się do rodzaju silnika zainstalowanego w samolocie, na przykład silnik odrzutowy, silnik śmigłowy itp.
+
+Year (Rok) - Oznacza rok produkcji samolotu.
