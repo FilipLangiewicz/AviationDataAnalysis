@@ -1,0 +1,10 @@
+1. Atlanta – Hartsfield Int., USA KATL ATL 89332 1,5% 2585
+2. Chicago - O`Hare Int., USA KORD ORD 66665 3,3% 2530
+3. Los Angeles – International, USA KLAX LAX 58915 4,2% 1795
+4. Dallas / Fort Worth – Int., USA KDFW DFW 56905 1,6% 1810
+5. Denver – International, USA KDEN DEN 52211 4,1% 1965
+6. Nowy Jork – JFK, USA KJFK JFK 46496 1,4% 1145
+7. Houston – George Bush, USA KIAH IAH 40475 1,2% 1415
+8. Las Vegas – McCarran, USA KLAS LAS 39397 -2,6% 1255
+9. San Francisco – International, USA KSFO SFO 39255 5,1% 1180
+10. Phoenix – Sky Harbor, USA KPHX PHX 38552 1,9% 1390
