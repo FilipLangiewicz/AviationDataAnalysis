@@ -110,7 +110,7 @@ fillMeanTime <- function() {
 
 for (file in files) {  #file_tmp) { 
   data <- read.csv(file.path("..", "dane", "lata", file))
-  data$DepDelay <- if_else(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
+  data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
   
   print(
     df <- data %>%
@@ -152,7 +152,7 @@ for (file in files) {  #file_tmp) {
              fill = fillCancelledRatio(),
              color = "black") +
     geom_text(aes(y = -28 , label = Origin),
-              hjust = 1.8,
+              hjust = 2,
               vjust = 0.3,
               size = 6,
               fontface = "bold",
@@ -161,9 +161,9 @@ for (file in files) {  #file_tmp) {
     theme_minimal() +
     labs(x = "", y = "") +
     scale_y_continuous(
-      breaks =  c(-seq(27, 0, -3), seq(0, 18, 3)),
-      labels = c(seq(27, 0, -3), 0:6),
-      limits = c(-33, 18)) +
+      breaks =  c(-seq(27, 0, -3), seq(0, 21, 3)),
+      labels = c(seq(27, 0, -3), 0:7),
+      limits = c(-33, 23)) +
     theme(axis.text.y = element_blank(),
           plot.margin = margin(20, 20, 20, 20),
           panel.spacing = margin(t = 20)) +
