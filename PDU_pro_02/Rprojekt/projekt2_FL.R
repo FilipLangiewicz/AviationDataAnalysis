@@ -10,7 +10,7 @@ library("stringi")
 
 data <- read.csv(file.path("..", "dane", "lata", "2006.csv"))
 #filtruje danych - wylot do 7 minut przed czasem uznaje za punktualny (0 minut spoznienia)
-data$DepDelay <- if_else(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
+data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
 
 
 airports <- read.csv(file.path("..", "dane", "airports.csv"))
@@ -72,8 +72,43 @@ biggestAirports <- c("ATL", "DEN", "DFW", "IAH", "JFK", "LAS", "LAX", "ORD", "PH
 delayWeight <- 1
 cancelledWeight <- 3
 
+file_tmp <- files[19:20]
 
-for (file in files) {
+
+
+
+
+fillCancelledRatio <- function() {
+  ifelse(df$Origin == "ATL", "yellow3", 
+         ifelse(df$Origin == "DEN", "red3",
+                ifelse(df$Origin == "DFW", "green3",
+                       ifelse(df$Origin == "IAH", "blue3",
+                              ifelse(df$Origin == "JFK", "pink3",
+                                     ifelse(df$Origin == "LAS", "grey50",
+                                            ifelse(df$Origin == "LAX", "purple3",
+                                                   ifelse(df$Origin == "ORD", "violetred3",
+                                                          ifelse(df$Origin == "PHX", "antiquewhite3",
+                                                                 ifelse(df$Origin == "SFO", "orange3", 
+                                                                        "white"))))))))))
+}
+
+fillMeanTime <- function() {
+  ifelse(df$Origin == "ATL", "yellow1", 
+         ifelse(df$Origin == "DEN", "red1",
+                ifelse(df$Origin == "DFW", "green1",
+                       ifelse(df$Origin == "IAH", "blue1",
+                              ifelse(df$Origin == "JFK", "pink1",
+                                     ifelse(df$Origin == "LAS", "grey70",
+                                            ifelse(df$Origin == "LAX", "purple1",
+                                                   ifelse(df$Origin == "ORD", "violetred2",
+                                                          ifelse(df$Origin == "PHX", "antiquewhite2",
+                                                                 ifelse(df$Origin == "SFO", "orange1", 
+                                                                        "white"))))))))))
+}
+
+
+
+for (file in files) {  #file_tmp) { 
   data <- read.csv(file.path("..", "dane", "lata", file))
   data$DepDelay <- if_else(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
   
@@ -95,26 +130,49 @@ for (file in files) {
              summarize(cancelledRatio = mean(Cancelled) * 100),
              by = join_by(Origin)) %>% 
       mutate(Score = meanTime * delayWeight + cancelledRatio * cancelledWeight) %>% 
-      left_join(airports, by = join_by(Origin == iata)) %>% 
-      arrange(Score)
+      left_join(airports %>% 
+                  select(iata, airport, city, state, country),
+                by = join_by(Origin == iata)) %>% 
+      arrange(desc(Score)) %>% 
+      mutate(position = letters[1:10])
   )
   
   
-  ggplot(df, aes(x = Origin)) +
-    geom_bar(aes(y = -meanTime, fill = "meanTime"),
+  ggplot(df, aes(x = position)) +
+    geom_bar(aes(y = -meanTime),
              stat = "identity",
              position = "stack",
-             width = 0.5) +
-    geom_bar(aes(y = cancelledRatio, fill = "cancelledRatio"),
+             width = 0.8,
+             fill = fillMeanTime(),
+             color = "black") +
+    geom_bar(aes(y = 3 * cancelledRatio),
              stat = "identity",
              position = "stack",
-             width = 0.5) +
-    ylim(-30, 5) +
+             width = 0.8, 
+             fill = fillCancelledRatio(),
+             color = "black") +
+    geom_text(aes(y = -28 , label = Origin),
+              hjust = 1.8,
+              vjust = 0.3,
+              size = 6,
+              fontface = "bold",
+              family = "mono") +
     coord_flip() +
     theme_minimal() +
-    scale_fill_manual(values = c(meanTime = "blue", cancelledRatio = "red"),
-                      guide = guide_legend(title = NULL)) +
-    labs(x = "", y = "") 
+    labs(x = "", y = "") +
+    scale_y_continuous(
+      breaks =  c(-seq(27, 0, -3), seq(0, 18, 3)),
+      labels = c(seq(27, 0, -3), 0:6),
+      limits = c(-33, 18)) +
+    theme(axis.text.y = element_blank(),
+          plot.margin = margin(20, 20, 20, 20),
+          panel.spacing = margin(t = 20)) +
+    geom_segment(aes(x = 0, y = 0, xend = 11, yend = 0),
+                 arrow = arrow(length = unit(0.4, "cm")),
+                 linewidth = 1.3,
+                 lineend = "square") 
+    
+    
 
   nazwa <- stri_replace_all_regex(file, "\\.[^.]*$", ".jpg")
   
@@ -123,6 +181,7 @@ for (file in files) {
   
   
 }
+
 
 
 ggplot(df) +
@@ -140,7 +199,7 @@ ggplot(df) +
 
   
   
-  plot <- ggplot(df) +
+  ggplot(df) +
     geom_bar(aes(x = Origin, y = -meanTime, fill = "meanTime"),
              stat = "identity",
              width = 0.5,
