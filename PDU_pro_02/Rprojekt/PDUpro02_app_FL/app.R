@@ -39,13 +39,13 @@ stworzWykres <- function(df, year) {
              stat = "identity",
              position = "stack",
              width = 0.8,
-             fill = fillMeanTime(),
+             fill = fillMeanTime(df),
              color = "black") +
     geom_bar(aes(y = 3 * cancelledRatio),
              stat = "identity",
              position = "stack",
              width = 0.8, 
-             fill = fillCancelledRatio(),
+             fill = fillCancelledRatio(df),
              color = "black") +
     geom_text(aes(y = -28 , label = Origin),
               hjust = 2,
@@ -101,7 +101,8 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("myPlot")
+           plotOutput("myPlot"),
+           textOutput("bestAirport")
         )
     )
 )
@@ -111,7 +112,7 @@ server <- function(input, output) {
 
     output$myPlot <- renderPlot({
       # wczytanie danych
-      data <- read.csv(file.path("..", "..", "dane", "lata", file))
+      data <- read.csv(file.path("..", "..", "dane", "lata", paste(input$rok, ".csv", sep="")))
       data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
       
       # obrobka danych
@@ -124,6 +125,8 @@ server <- function(input, output) {
       
       
     })
+    
+  output$bestAirport <- renderText({"tekst"})
 }
 
 # Run the application 
