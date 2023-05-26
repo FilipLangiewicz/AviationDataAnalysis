@@ -7,6 +7,12 @@
 #    http://shiny.rstudio.com/
 #
 
+
+library("dplyr")
+library("ggplot2")
+library("stringi")
+
+
 obrobDane <- function(data) {
   df <- data %>%
     select(Year, UniqueCarrier, FlightNum, TailNum, DepDelay, Origin, Cancelled, Diverted) %>%
@@ -56,7 +62,7 @@ stworzWykres <- function(df, year) {
     geom_text(aes(x = 11.3, y = 0, label = "")) +
     coord_flip() +
     theme_minimal() +
-    labs(x = "", y = paste("Średni czas opóźnienia (min)", "% opóźnionych lotów", sep = "                         ")) +
+    labs(x = "", y = paste("Średni czas opóźnienia (min)", "% odwołanych lotów", sep = "                         ")) +
     scale_y_continuous(
       breaks =  c(-seq(27, 0, -3), seq(0, 21, 3)),
       labels = c(seq(27, 0, -3), 0:7),
@@ -111,12 +117,19 @@ ui <- fluidPage(
 server <- function(input, output) {
 
     output$myPlot <- renderPlot({
-      # wczytanie danych
-      data <- read.csv(file.path("..", "..", "dane", "lata", paste(input$rok, ".csv", sep="")))
-      data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
+      # wczytanie danych i obrobka w poczatkowych stadiach projektu
+      # data <- read.csv(file.path("..", "..", "dane", "lata", paste(input$rok, ".csv", sep="")))
+      # data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
       
       # obrobka danych
-      df <- obrobDane(data)
+      # df <- obrobDane(data)
+      
+      #wczytanie danych od razu obrobionych
+      df <- read.csv(file.path("..", "..", "dane", "najwazniejszeDane.csv")) %>% 
+        filter(Year == input$rok)
+          
+      
+      
       
       #tworzenie wykresu
       year <- input$rok

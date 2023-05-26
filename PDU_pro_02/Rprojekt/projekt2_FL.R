@@ -6,8 +6,6 @@
 library("dplyr")
 library("ggplot2")
 library("stringi")
-library("gganimate")
-library("gifski")
 
 
 data <- read.csv(file.path("..", "dane", "lata", "2006.csv"))
@@ -16,8 +14,6 @@ data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay 
 
 
 airports <- read.csv(file.path("..", "dane", "airports.csv"))
-
-
 files <- list.files(path = file.path("..", "dane", "lata"))
 
 
@@ -38,7 +34,7 @@ biggestAirports <- c("ATL", "DEN", "DFW", "IAH", "JFK", "LAS", "LAX", "ORD", "PH
 delayWeight <- 1
 cancelledWeight <- 3
 
-file_tmp <- files[19:20]
+# file_tmp <- files[19:20]
 
 
 
@@ -47,28 +43,28 @@ file_tmp <- files[19:20]
 fillCancelledRatio <- function(df) {
   ifelse(df$Origin == "ATL", "yellow3", 
          ifelse(df$Origin == "DEN", "red3",
-                ifelse(df$Origin == "DFW", "green3",
-                       ifelse(df$Origin == "IAH", "blue3",
+                ifelse(df$Origin == "IAH", "green3",
+                       ifelse(df$Origin == "DFW", "blue3",
                               ifelse(df$Origin == "JFK", "pink3",
                                      ifelse(df$Origin == "LAS", "grey50",
                                             ifelse(df$Origin == "LAX", "purple3",
-                                                   ifelse(df$Origin == "ORD", "violetred3",
-                                                          ifelse(df$Origin == "PHX", "antiquewhite3",
-                                                                 ifelse(df$Origin == "SFO", "orange3", 
+                                                   ifelse(df$Origin == "PHX", "violetred3",
+                                                          ifelse(df$Origin == "SFO", "antiquewhite3",
+                                                                 ifelse(df$Origin == "ORD", "orange3", 
                                                                         "white"))))))))))
 }
 
 fillMeanTime <- function(df) {
   ifelse(df$Origin == "ATL", "yellow1", 
          ifelse(df$Origin == "DEN", "red1",
-                ifelse(df$Origin == "DFW", "green1",
-                       ifelse(df$Origin == "IAH", "blue1",
+                ifelse(df$Origin == "IAH", "green1",
+                       ifelse(df$Origin == "DFW", "blue1",
                               ifelse(df$Origin == "JFK", "pink1",
                                      ifelse(df$Origin == "LAS", "grey70",
                                             ifelse(df$Origin == "LAX", "purple1",
-                                                   ifelse(df$Origin == "ORD", "violetred2",
-                                                          ifelse(df$Origin == "PHX", "antiquewhite2",
-                                                                 ifelse(df$Origin == "SFO", "orange1", 
+                                                   ifelse(df$Origin == "PHX", "violetred2",
+                                                          ifelse(df$Origin == "SFO", "antiquewhite2",
+                                                                 ifelse(df$Origin == "ORD", "orange1", 
                                                                         "white"))))))))))
 }
 
@@ -155,14 +151,22 @@ Scores <- data.frame(biggestAirports, matrix(0, nrow = 10, ncol = 4))
 colnames(Scores) <- c("Origin", "score", "TotalDelayTime", "TotalCancelledNumber", "TotalFlightsNumber")
 
 for (file in files) {  #file_tmp) { 
-  # wczytanie danych i mala obrobka
-  data <- read.csv(file.path("..", "dane", "lata", file))
-  data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
+  # # wczytanie danych i mala obrobka
+  # data <- read.csv(file.path("..", "dane", "lata", file))
+  # data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
+  # 
+  # # wybranie tego co chcemy 
+  # print(
+  #   df <- stworzDf(data)
+  # )
   
-  # wybranie tego co chcemy 
+  # wybranie tego co chcemy ale szybciej
+  rok <- stri_replace_all_regex(file, "\\.[^.]*$", "")
   print(
-    df <- stworzDf(data)
+    df <- data %>% 
+      filter(Year == rok)
   )
+  
   
   #do podsumowania dane wybieramy
   
