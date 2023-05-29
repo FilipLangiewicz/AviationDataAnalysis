@@ -46,7 +46,6 @@ all_companies<-function(year){
 
 library(shiny)
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   headerPanel(title="Opóźnienia przylotów w poszczególnych przedziałach czasowych"),
   sidebarLayout(
@@ -63,7 +62,6 @@ ui <- fluidPage(
 
 
 
-# Define server logic required to draw a histogram
 server <- function(input, output,session) {
   observe({
     company<-all_companies(input$rok)
