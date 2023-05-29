@@ -7,16 +7,21 @@
 #    http://shiny.rstudio.com/
 #
 
+
+
+# aplikacja prezentujaca zestaw danych
+# dla wybranego z listy lotniska (po IATA)
+
+
+
 library("shiny")
 library("dplyr")
-library("ggplot2")
 library("stringi")
 library("ggplot2")
 library("scales")
 
 
 biggestAirports <- c("ATL", "DEN", "DFW", "IAH", "JFK", "LAS", "LAX", "ORD", "PHX", "SFO")
-
 
 
 # Define UI for application 
@@ -26,7 +31,8 @@ ui <- fluidPage(
     titlePanel("Zestaw danych na temat funkcjonowania danego lotniska w latach 1988 - 2007"),
     
     
-    # Sidebar with a slider input for airport iata
+    
+    # input    
     sidebarLayout(
         sidebarPanel(
             selectInput("lotnisko",
@@ -80,7 +86,6 @@ ui <- fluidPage(
                                  }"
             )
             ),
-            
             imageOutput("obraz", height = "100%"),
             tags$head(tags$style("#obraz img {width: 100%;
                                 margin-top: 20px;
@@ -88,9 +93,7 @@ ui <- fluidPage(
                                }"
                               )
             ),
-            
       ),
-
         
         
         mainPanel(
@@ -98,13 +101,12 @@ ui <- fluidPage(
                  plotOutput("meanTime", height = "230px"),
                  plotOutput("cancelledRatio", height = "230px")
         )
-        
     )
-    
-
 )
 
-# Define server logic required 
+
+
+# Define server logic  
 server <- function(input, output) {
     najwazniejszeDane <- read.csv(file.path("..", "..", "dane", "najwazniejszeDane.csv"))
     najwazniejszeDane$cancelledRatio <- najwazniejszeDane$cancelledRatio / 100 
@@ -112,7 +114,7 @@ server <- function(input, output) {
     states <- read.csv((file.path("..", "..", "dane", "states.csv")), sep = ";")
     
      
-    # generowanie wykresu z liczba lotow w tych latach
+    # generowanie wykresu z liczba lotow po latach
     output$flightsNumberPlot <- renderPlot({
       lotnisko <- input$lotnisko
       
@@ -266,8 +268,6 @@ server <- function(input, output) {
       paste("Szerokość geograficzna: ", lat, sep = "")
     })
     
-    
-    
     znajdzDana <- function(kolumna, lotnisko) {
       airports %>% 
         filter(iata == lotnisko) %>% 
@@ -279,22 +279,10 @@ server <- function(input, output) {
            alt = "Lotnisko"
       )
     }, deleteFile = FALSE)
-    
 }
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -1,47 +1,14 @@
 #skrypt do wygenerowania gifa
 
 
-library("dplyr")
 library("ggplot2")
-library("stringi")
 library("gganimate")
 library("gifski")
 
 
-
-airports <- read.csv(file.path("..", "dane", "airports.csv"))
-files <- list.files(path = file.path("..", "dane", "lata"))
-
-
-biggestAirports <- c("ATL", "DEN", "DFW", "IAH", "JFK", "LAS", "LAX", "ORD", "PHX", "SFO")
+dfAllYears <- read.csv(file.path("..", "dane", "najwazniejszeDane.csv"))
 delayWeight <- 1
 cancelledWeight <- 3
-
-dfAllYears <- data.frame(matrix(ncol = 14, nrow = 0))
-colnames(dfAllYears) <- c("Origin", "meanTime", "flightsNumber", "medianTime", "maxTime", "minTime", "cancelledRatio", "Score", "airport", "city", "state", "country", "position", "Year")
-
-#tworzenie ramki danych ze wszystkich lat (z tylko potrzebnymi danymi)
-
-for (file in files) {
-  # wczytanie danych i mala obrobka
-  data <- read.csv(file.path("..", "dane", "lata", file))
-  data$DepDelay <- ifelse(data$DepDelay >= 0, data$DepDelay, ifelse(data$DepDelay >= -7, 0, data$DepDelay))
-  
-  
-  rok <- stri_replace_all_regex(file, "\\.[^.]*$", "")
-  
-  # wybranie tego co chcemy 
-  df <- stworzDf(data)
-  dfWithYear <- df %>% 
-    mutate(Year = rok)
-  
-  #laczenie w jedna duza
-  dfAllYears <- rbind(dfAllYears, dfWithYear)
-}
-
-write.csv(dfAllYears,file.path("..", "dane", "lata", "najwazniejszeDane.csv"))
-
-
 
 anim <- 
   ggplot(dfAllYears, aes(x = position, group = Origin, fill = Origin)) +
@@ -91,9 +58,12 @@ anim <-
                arrow = arrow(length = unit(0.4, "cm")),
                linewidth = 1.3,
                lineend = "square") +
-  transition_states(Year, transition_length = 2, state_length = 1, wrap = FALSE)
+  transition_states(Year, 
+                    transition_length = 2, 
+                    state_length = 1, 
+                    wrap = FALSE)
 
 animate(anim, 240, fps = 8,  width = 1500, height = 1000, 
-        renderer = gifski_renderer(file.path("..","MozeKiedysBedzieTuWykres", "zmiany2.gif")), end_pause = 15, start_pause =  15) 
+        renderer = gifski_renderer(file.path("..","MozeKiedysBedzieTuWykres", "zmiany.gif")), end_pause = 15, start_pause =  15) 
 
 

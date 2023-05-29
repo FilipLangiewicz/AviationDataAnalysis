@@ -7,10 +7,45 @@
 #    http://shiny.rstudio.com/
 #
 
+# to aplikacja, ktorej finalnie nie uzylem,
+# ale przydala sie do nauki pakietu
+
 
 library("dplyr")
 library("ggplot2")
 library("stringi")
+library("shiny")
+
+fillCancelledRatio <- function(df) {
+  ifelse(df$Origin == "ATL", "yellow3", 
+         ifelse(df$Origin == "DEN", "red3",
+                ifelse(df$Origin == "IAH", "green3",
+                       ifelse(df$Origin == "DFW", "blue3",
+                              ifelse(df$Origin == "JFK", "pink3",
+                                     ifelse(df$Origin == "LAS", "grey50",
+                                            ifelse(df$Origin == "LAX", "purple3",
+                                                   ifelse(df$Origin == "PHX", "violetred3",
+                                                          ifelse(df$Origin == "SFO", "antiquewhite3",
+                                                                 ifelse(df$Origin == "ORD", "orange3", 
+                                                                        "white"))))))))))
+}
+
+fillMeanTime <- function(df) {
+  ifelse(df$Origin == "ATL", "yellow1", 
+         ifelse(df$Origin == "DEN", "red1",
+                ifelse(df$Origin == "IAH", "green1",
+                       ifelse(df$Origin == "DFW", "blue1",
+                              ifelse(df$Origin == "JFK", "pink1",
+                                     ifelse(df$Origin == "LAS", "grey70",
+                                            ifelse(df$Origin == "LAX", "purple1",
+                                                   ifelse(df$Origin == "PHX", "violetred2",
+                                                          ifelse(df$Origin == "SFO", "antiquewhite2",
+                                                                 ifelse(df$Origin == "ORD", "orange1", 
+                                                                        "white"))))))))))
+}
+
+
+
 
 
 obrobDane <- function(data) {
@@ -40,7 +75,7 @@ obrobDane <- function(data) {
 }
 
 stworzWykres <- function(df, year) {
-  plot <- ggplot(df, aes(x = position)) +
+  ggplot(df, aes(x = position)) +
     geom_bar(aes(y = -meanTime),
              stat = "identity",
              position = "stack",
@@ -62,7 +97,7 @@ stworzWykres <- function(df, year) {
     geom_text(aes(x = 11.3, y = 0, label = "")) +
     coord_flip() +
     theme_minimal() +
-    labs(x = "", y = paste("Średni czas opóźnienia (min)", "% odwołanych lotów", sep = "                         ")) +
+    labs(x = "", y = paste("Średni czas opóźnienia (min)", "% opóźnionych lotów", sep = "                         ")) +
     scale_y_continuous(
       breaks =  c(-seq(27, 0, -3), seq(0, 21, 3)),
       labels = c(seq(27, 0, -3), 0:7),
@@ -84,19 +119,17 @@ stworzWykres <- function(df, year) {
                  arrow = arrow(length = unit(0.4, "cm")),
                  linewidth = 1.3,
                  lineend = "square")
-  plot
 }
 
 
-library(shiny)
 
-# Define UI for application that draws a histogram
+# Define UI for application 
 ui <- fluidPage(
 
     # Application title
     titlePanel("Które lotnisko w danym roku cechowało się najlepszym odlotem"),
 
-    # Sidebar with a slider input for number of bins 
+    # Sidebar 
     sidebarLayout(
         sidebarPanel(
             selectInput("rok",
@@ -113,7 +146,7 @@ ui <- fluidPage(
     )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic
 server <- function(input, output) {
 
     output$myPlot <- renderPlot({
@@ -127,16 +160,11 @@ server <- function(input, output) {
       #wczytanie danych od razu obrobionych
       df <- read.csv(file.path("..", "..", "dane", "najwazniejszeDane.csv")) %>% 
         filter(Year == input$rok)
-          
-      
       
       
       #tworzenie wykresu
       year <- input$rok
       stworzWykres(df, year)
-      
-      
-      
     })
     
   output$bestAirport <- renderText({"tekst"})
@@ -144,3 +172,6 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+
+
